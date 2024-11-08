@@ -63,49 +63,13 @@ update_images() {
 
 }
 
-check_npm() {
-	package='@_koii/	@0.2.2'
-	if [ `npm list | grep -c $package` -eq 0 ]; then
-		npm install $package --no-shrinkwrap
-	fi
-}
 
 unstake() {
-  number=$1
-	staking_address="$(koii-keygen pubkey koii-keys/koii-${number}/namespace/staking_wallet.json 2>/dev/null || echo 'None')"
-	raw_stake=$(echo $available_rewards | jq --arg ADDRESS "$staking_address" '.stake_list[$ADDRESS]')
-	raw_minimum_stake_amount=$(echo $available_rewards | jq '.minimum_stake_amount')
-
-	stake=$(echo "scale=2; $raw_stake / 1000000000" | bc -l 2>/dev/null || echo "0.00")
-	minimum_stake_amount=$(echo "scale=2; $raw_minimum_stake_amount / 1000000000" | bc -l 2>/dev/null || echo "minimum stake error" && exit 1)
-	staked=$(echo "$stake > 0" | bc -l)
-	echo "koii-$number: $staked"
-	if [[ $staked -eq 1 ]]; then
-		expect -c "
-		set wallet_path \"koii-keys/koii-${number}/wallet/  id.json\"
-
-		"
-		sleep 1
-	fi
+  echo 0
 }
 
 claim() {
-    number=$1
-
-	if [[ "$COMMAND" == "withdraw-unstaked" ]]; then
-		WITHDRAW_ADDRESS="$(koii-keygen pubkey koii-keys/koii-${number}/namespace/staking_wallet.json 2>/dev/null || echo 'None')"
-		TASK_IDS=$OLD_TASK_IDS
-	elif [[ "$COMMAND" == "claim-to-nodes" ]]; then
-		WITHDRAW_ADDRESS="$(koii-keygen pubkey koii-keys/koii-${number}/wallet/id.json 2>/dev/null || echo 'None')"
-	elif [[ "$COMMAND" == "claim-from-old-tasks" ]]; then
-		WITHDRAW_ADDRESS="$(koii-keygen pubkey koii-keys/koii-${number}/wallet/id.json 2>/dev/null || echo 'None')"
-		TASK_IDS=$OLD_TASK_IDS
-	fi
-
-    expect -c "
-    set wallet_path \"koii-keys/koii-${number}/wallet/id.json\"
-    "
-    sleep 3
+  exho 0
 }
 
 get_submissions() {
@@ -176,24 +140,6 @@ show_stake() {
 	echo "$stake"
 }
 
-restake() {
-	number=$1
-	force=$2
-	address="$(koii-keygen pubkey koii-keys/koii-${number}/namespace/staking_wallet.json)"
-	random_string=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 13)
-	num_stake_messages=$(docker logs -n300 koii-$number | grep -e "You must stake" -e "insufficient funds" -e "incorrect program id for instruction" | wc -l)	
-	echo "koii-$number: $num_stake_messages"
-	if [[ $num_stake_messages -gt 0 || "$force" == "true" ]]; then
-		# echo "need koii: $address"
-		echo "renewing staking wallet koii-$number.."
-		# docker compose -p $i down -v
-		docker stop koii-$i
-		sudo mv koii-keys/koii-$number/namespace/staking_wallet.json koii-keys/koii-$number/namespace/staking_wallet-old-$random_string.json 
-		docker start koii-$i
-		# koii transfer --allow-unfunded-recipient $address 10
-		# docker exec -it koii-$number bash -c "source ~/.profile && koii transfer $address 10"
-	fi
-}
 
 set_range() {
 	sed -i "s/^NODES_RANGE=.*/NODES_RANGE=$1/g" .env
@@ -229,7 +175,8 @@ fi
 
 
 if [[ "$COMMAND" == "unstake" || "$COMMAND" == "claim" || "$COMMAND" == "claim-to-nodes" || "$COMMAND" == "claim-from-old-tasks" || "$COMMAND" == "withdraw-unstaked" ]];then
-	check_npm
+  echo "will be added soon"
+  exit
 fi
 
 if [[ "$COMMAND" == "update-images" || "$COMMAND" == "download-images" ]];then
@@ -372,13 +319,13 @@ main() {
       balance=$(get_rewards "$i" "$task")
       echo "koii-$i: $balance KOII"
       if (( $(echo "$balance > 0" | bc -l) )); then
-        claim $i
+        claim "$i"
       else
         echo "koii-$i: NO balance"
       fi
 
     elif [[ "$COMMAND" == "unstake" ]];then
-      unstake $i
+      unstake "$i"
 
     elif [[ "$COMMAND" == "logs" ]];then
       docker logs -n1000 -f koii-$i

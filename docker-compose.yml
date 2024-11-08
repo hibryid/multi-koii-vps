@@ -2,22 +2,12 @@ services:
   koii:
     image: local/koii
     container_name: koii-${NUMBER}
-    # build: './configs/docker/koii'
-    volumes: 
+    volumes:
       - "./koii-keys/koii-${NUMBER}/wallet:/root/.config/koii"
       - "./koii-keys/koii-${NUMBER}/namespace:/root/VPS-task/namespace"
       - "./images:/images:ro"
-    # depends_on:
-    #   - glider
-    # network_mode: "container:glider"
     networks:
       - koii-net
-      # - koii-local-net
-    # dns:
-    #   - 8.8.8.8
-    # expose:
-    #   - 3000:3000
-    #   - 3001:3001
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     runtime: sysbox-runc
@@ -34,49 +24,10 @@ services:
       - TASK_STAKES=${TASK_STAKES}
       - NODE_VARS=${NODE_VARS}
       - KOII_IMAGE_VERSION=${KOII_IMAGE_VERSION}
-
     restart: always
-
-
-  # webtop:
-  #   image: lscr.io/linuxserver/webtop:arch-kde
-  #   container_name: webtop-${NUMBER}
-  #   # runtime: sysbox-runc
-  #   network_mode: "service:koii"
-  #   depends_on:
-  #     - koii
-  #   security_opt:
-  #     - seccomp=unconfined # optional
-  #     - apparmor=unconfined 
-  #   stdin_open: true # docker run -i
-  #   tty: true        # docker run -t
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     - TZ=Europe/Chisinau
-  #     # - SUBFOLDER=/ # optional
-  #     # - KEYBOARD=en-us-qwerty # optional
-  #     - TITLE=Webtop # optional
-  #   volumes:
-  #     - ./k:/home/abc/Desktop/k
-  #     # - /sys/fs/cgroup/:/sys/fs/cgroup/:ro
-  #     - /var/run/docker.sock:/var/run/docker.sock # optional
-  #   devices: 
-  #     # - /dev/dri:/dev/dri # optional
-  #     - /dev/fuse:/dev/fuse
-  #   shm_size: "4gb" # optional
-  #   privileged: true
-  #   restart: unless-stopped
 
 
 networks:
   koii-net:
     external: true
     name: koii-net-${NETNUMBER}
-    # driver: bridge
-
-  # koii-local-net:
-  #   internal: true
-  
-  # glider-net:
-  #   driver: bridge
