@@ -279,11 +279,12 @@ main() {
 
       for task in "${tasks_responses[@]}"; do
         task_id=$(echo "$task" | jq --raw-output ".task_id")
-        task_name=$(echo "$task" | jq ".task_name")
-        task_type=$(echo "$task" | jq --raw-output ".task_type")
-
-        rewards_amount=$(get_rewards "$i" "$task")
-        echo "$task_id ($task_name) $task_type: $rewards_amount"
+        if echo "$current_task_ids" | grep -q "$task_id"; then
+          task_name=$(echo "$task" | jq ".task_name")
+          task_type=$(echo "$task" | jq --raw-output ".task_type")
+          rewards_amount=$(get_rewards "$i" "$task")
+          echo "$task_id ($task_name) $task_type: $rewards_amount"
+        fi
       done
 
     elif [[ "$COMMAND" == "show-stakes" ]];then
@@ -304,13 +305,13 @@ main() {
       echo "koii-$i submissions:"
 
       for task in "${tasks_responses[@]}"; do
-
         task_id=$(echo "$task" | jq --raw-output ".task_id")
-        task_name=$(echo "$task" | jq ".task_name")
-        task_type=$(echo "$task" | jq --raw-output ".task_type")
-        count=$(get_submissions "$i" "$task")
-
-        echo "$task_id ($task_name): $count / 5 rounds"
+        if echo "$current_task_ids" | grep -q "$task_id"; then
+          task_name=$(echo "$task" | jq ".task_name")
+          task_type=$(echo "$task" | jq --raw-output ".task_type")
+          count=$(get_submissions "$i" "$task")
+          echo "$task_id ($task_name): $count / 5 rounds"
+        fi
       done
 
     elif [[ "$COMMAND" == "claim" || "$COMMAND" == "claim-to-nodes" || "$COMMAND" == "claim-from-old-tasks" || "$COMMAND" == "withdraw-unstaked" ]];then
