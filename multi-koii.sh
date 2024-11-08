@@ -14,9 +14,9 @@ stakes_file="$nodes_configs_folder/stakes"
 proxies_file="$nodes_configs_folder/proxies"
 
 
-task_ids_aka_array=$(echo -e "$(cat $task_ids_file)\n$DEFAULT_TASK_IDS" | \
+task_ids_aka_array=$(echo -e "$(cat $task_ids_file 2>/dev/null)\n$DEFAULT_TASK_IDS" | \
                       grep -oP '\K[A-Za-z0-9]+' | sort | uniq | tr '\n' ' ')
-old_task_ids_aka_array=$(echo -e "$(cat $old_task_ids_file)\n$DEFAULT_OLD_TASK_IDS" | \
+old_task_ids_aka_array=$(echo -e "$(cat $old_task_ids_file 2>/dev/null)\n$DEFAULT_OLD_TASK_IDS" | \
                           grep -oP '\K[A-Za-z0-9]+' | sort | uniq | tr '\n' ' ')
 
 
