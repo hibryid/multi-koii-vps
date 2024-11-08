@@ -251,7 +251,7 @@ main() {
     net_number=$(awk 'BEGIN { rounded = int('"$((10#${i}))/250"'+0.999999); print rounded }')
 
     up_commands='{
-      "up": "docker-compose-dind.yml", "up-alt": "docker-compose-alt.yml",
+      "up": "docker-compose.yml", "up-alt": "docker-compose-alt.yml",
       "up-old": "docker-compose.yml","up-sdind": "docker-compose-sdind.yml",
       "up-checker": "docker-compose-checker.yml"
     }'
