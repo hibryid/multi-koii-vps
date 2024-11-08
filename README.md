@@ -55,7 +55,7 @@ source ~/.profile
 ### Git clone and go to the project
 ```bash
 git clone https://github.com/hibryid/multi-koii-vps.git
-cd multi-koii
+cd multi-koii-vps
 ```
 
 ### Updating images
