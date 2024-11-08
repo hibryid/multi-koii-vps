@@ -88,8 +88,8 @@ bash multi-koii.sh up 1
 # bash multi-koii.sh up 0001
 
 # Running 3 nodes
-bash multi-koii.sh up-dind 1-3
-# bash multi-koii.sh up-dind 0001-0003
+bash multi-koii.sh up 1-3
+# bash multi-koii.sh up 0001-0003
 
 # show logs
 # You will have to send some KOII if it asks
