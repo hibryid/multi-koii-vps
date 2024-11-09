@@ -38,31 +38,32 @@ sudo usermod -aG docker $USER
 reset
 ```
 
+### Git clone and go to the project
+```bash
+git clone https://github.com/hibryid/multi-koii-vps.git
+cd multi-koii-vps
 
-### Install nodejs
+```
+
+### Install nodejs and some libraries
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - &&\
 sudo apt-get install -y nodejs
+npm install @_koii/web3.js @_koii/create-task-cli
 ```
 
 ### Install koii cli
 ```bash
 sh -c "$(curl -sSfL https://raw.githubusercontent.com/koii-network/k2-release/master/k2-install-init_v1.16.4.sh)"
-echo 'export PATH="~/.local/share/koii/install/active_release/bin:$PATH"' > ~/.profile
-source ~/.profile
+echo 'export PATH="~/.local/share/koii/install/active_release/bin:$PATH"' > ~/.bashrc
+source ~/.bashrc
 ```
 
-### Git clone and go to the project
-```bash
-git clone https://github.com/hibryid/multi-koii-vps.git
-cd multi-koii-vps
-```
 
 ### Updating images
 ```bash
 # Copy and edit for your settings
 cp .env.example .env
-
 bash multi-koii.sh update-images
 ```
 
