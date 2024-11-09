@@ -146,6 +146,41 @@ set_range() {
   echo "Done"
 }
 
+get_padding_width() {
+    local padding=$(echo $1 | cut -d'-' -f1)
+    echo ${#padding}
+}
+
+# Function to extract range numbers
+    get_range() {
+        local input=$1
+        local start=$(echo $input | cut -d'-' -f1)
+        local end=$(echo $input | cut -d'-' -f2)
+
+        # Remove leading zeros for numeric comparison
+        start=$(echo $start | sed 's/^0*//')
+        end=$(echo $end | sed 's/^0*//')
+
+        echo "$start $end"
+    }
+
+# Function to generate sequence
+generate_sequence() {
+    local start=$1
+    local end=$2
+    local padding=$3
+
+    local result=""
+    for ((i=start; i<=end; i++)); do
+        # Format number with proper padding
+        printf -v padded_num "%0${padding}d" $i
+        result+="$padded_num "
+    done
+
+    # Remove trailing space
+    echo "${result% }"
+}
+
 function get_task_info() {
   i=$1
   task_info=$(node rpc.js task-info "$i" 2>/dev/null)
@@ -202,10 +237,15 @@ fi
 
 if [[ $SC_NUMBER == *-* ]]; then
   RANGE_NUMBER=$(echo "$SC_NUMBER" | sed 's/-/ /g')
-  range=$(seq -w $RANGE_NUMBER)
+#  range=$(seq -w $RANGE_NUMBER)
   total_nodes=$(echo "$RANGE_NUMBER" | awk '{print $2}')
+  padding=$(get_padding_width "$SC_NUMBER")
+  read -r start end <<< "$(get_range "$SC_NUMBER")"
+  range=$(generate_sequence "$start" "$end" "$padding")
 else
-  range=$(seq -w $SC_NUMBER $SC_NUMBER)
+  padding=$(get_padding_width "$SC_NUMBER")
+  read -r start end <<< "$(get_range "$SC_NUMBER")"
+  range=$(generate_sequence "$start" "$end" "$padding")
   total_nodes=$SC_NUMBER
 fi
 
