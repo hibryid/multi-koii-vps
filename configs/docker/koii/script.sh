@@ -61,7 +61,7 @@ re='^[0-9]+([.][0-9]+)?$'
 while true; do
     koii_balance=$(koii balance | awk '{print $1}')
     if [[ $koii_balance == "0" ]];then
-        echo "Send the needed tokens and $((INITIAL_STAKING_WALLET_BALANCE*2+1)): $(koii address)"
+        echo "Send the needed amount of $((INITIAL_STAKING_WALLET_BALANCE*2+1)) KOII: $(koii address)"
         sleep 10
     elif [ $(echo "$koii_balance > 0.0" | bc) ];then
         echo "OK: $koii_balance"
