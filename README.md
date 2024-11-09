@@ -106,6 +106,10 @@ bash multi-koii.sh down 1-3
 # The best metric to see if tokens are staked on the certain task
 bash multi-koii.sh show-stakes 1
 
+# show submissions on the tasks
+# The best summary indicator for tracking the nodes
+bash multi-koii.sh show-submissions 1
+
 # Show wallet addresses
 # Send koii and kpl tokens only to the system key address
 bash multi-koii.sh show-addresses 0001
