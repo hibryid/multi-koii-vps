@@ -136,7 +136,7 @@ show_stake() {
   staking_address="$(koii-keygen pubkey koii-keys/koii-${number}/namespace/${wallet_name}.json 2>/dev/null || echo 'None')"
 
   raw_stake=$(echo "$task_info" | jq --arg ADDRESS "$staking_address" '.stake_list[$ADDRESS]')
-  stake=$(echo "scale=2; $raw_stake / 1000000000" | bc -l 2>/dev/null || echo "0.00")
+  stake=$( printf '%.3f\n' $(echo "scale=2; $raw_stake / 1000000000" | bc -l 2>/dev/null || echo "None"))
   echo "$stake"
 }
 
@@ -183,7 +183,7 @@ generate_sequence() {
 
 function get_task_info() {
   i=$1
-  task_info=$(node rpc.js task-info "$i" 2>/dev/null)
+  task_info=$(npx tsx rpc.ts task-info "$i" 2>/dev/null)
   task_type=$(echo "$task_info" | head -n1 | grep -io "Koii\|KPL")
   echo "$task_info" |\
     sed '/^On KPL Task Operations/d;/On Koii Task Operations/d' |\
@@ -196,15 +196,19 @@ if [[ "$COMMAND" == "show-rewards" || "$COMMAND" == "claim" ||
       "$COMMAND" == "show-stakes" || "$COMMAND" == "show-submissions" ]];then
 
   for i in $task_ids_aka_array; do
-    available_rewards=$(get_task_info "$i")
-    tasks_responses+=("$available_rewards")
+    available_info=$(get_task_info "$i")
+    if [ -z "$available_info" ];then
+      echo "ERROR: something went wrong in receiving response from RPC"
+      exit
+    fi
+    tasks_responses+=("$available_info")
   done
 
 elif [[ "$COMMAND" == "withdraw-unstaked" || "$COMMAND" == "claim-from-old-tasks" ]]; then
 
   for i in $old_task_ids_aka_array; do
-    available_rewards=$(get_task_info "$i")
-    tasks_responses+=("$available_rewards")
+    available_info=$(get_task_info "$i")
+    tasks_responses+=("$available_info")
   done
 fi
 
@@ -252,7 +256,7 @@ fi
 # check if network is created
 max_net_number=$(awk 'BEGIN { rounded = int('"$((10#${total_nodes}))/250"'+0.999999); print rounded }')
 for i in $(seq $max_net_number); do
-  docker network create koii-net-$i 2>/dev/null
+  docker network create koii-net-$i 1>/dev/null 2>/dev/null
 done
 
 
@@ -330,8 +334,10 @@ main() {
     elif [[ "$COMMAND" == "show-stakes" ]];then
       echo "koii-$i stakes:"
 
+
       for task in "${tasks_responses[@]}"; do
         task_id=$(echo "$task" | jq --raw-output ".task_id")
+
         if echo "$current_task_ids" | grep -q "$task_id"; then
           task_name=$(echo "$task" | jq ".task_name")
           task_type=$(echo "$task" | jq --raw-output ".task_type")

@@ -6,9 +6,10 @@ ARG GID
 
 RUN apt update && \
     apt install -y sudo && \
+    if [ "$UID" != 0 ]; then \
     addgroup --gid $GID koii && \
     adduser --uid $UID --gid $GID --disabled-password --gecos "" koii && \
-    echo 'koii ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+    echo 'koii ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers ;fi
 
 
 RUN apt update && apt install tmux wget git nano jq iputils-ping htop bc unzip curl iproute2 iptables sudo -y

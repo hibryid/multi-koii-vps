@@ -35,6 +35,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 
 sudo groupadd docker
 sudo usermod -aG docker $USER
+newgrp docker
 reset
 ```
 
@@ -42,7 +43,6 @@ reset
 ```bash
 git clone https://github.com/hibryid/multi-koii-vps.git
 cd multi-koii-vps
-
 ```
 
 ### Install nodejs and some libraries
@@ -50,6 +50,7 @@ cd multi-koii-vps
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - &&\
 sudo apt-get install -y nodejs
 npm install @_koii/web3.js @_koii/create-task-cli
+npm install -D tsx
 ```
 
 ### Install koii cli
@@ -66,17 +67,6 @@ source ~/.bashrc
 cp .env.example .env
 bash multi-koii.sh update-images
 ```
-
-### If you need to set any custom ids, tasks and variables for nodes
-And edit them in the format you like, according to the examples. \
-The number of a raw is the number of the node
-```bash
-cp configs/nodes/example-proxies configs/nodes/proxies
-cp configs/nodes/example-old-task-ids configs/nodes/old-task-ids
-cp configs/nodes/example-node-vars configs/nodes/node-vars
-cp configs/nodes/example-task-ids configs/nodes/task-ids
-```
-
 
 ### Commands for running nodes:
 Here is a list of examples.\
@@ -132,4 +122,14 @@ bash multi-koii.sh claim 1
 # Unstake from the old task
 # Will be added soon
 sudo bash multi-koii.sh unstake 1
+```
+
+### If you need to set any custom ids, tasks and variables for nodes
+And edit them in the format you like, according to the examples. \
+The number of a raw is the number of the node
+```bash
+cp configs/nodes/example-proxies configs/nodes/proxies
+cp configs/nodes/example-old-task-ids configs/nodes/old-task-ids
+cp configs/nodes/example-node-vars configs/nodes/node-vars
+cp configs/nodes/example-task-ids configs/nodes/task-ids
 ```

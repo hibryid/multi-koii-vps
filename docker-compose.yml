@@ -10,7 +10,7 @@ services:
       - koii-net
     stdin_open: true # docker run -i
     tty: true        # docker run -t
-    runtime: sysbox-runc
+    privileged: true
     devices:
       - /dev/net/tun:/dev/net/tun
     environment:

@@ -19,3 +19,4 @@ tests/
 *.tar
 test*.*
 docker-compose-*.yml
+send.sh

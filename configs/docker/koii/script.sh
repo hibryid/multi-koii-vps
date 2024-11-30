@@ -108,4 +108,4 @@ fi
 
 docker compose up
 echo "what?"
-sleep 100000
+sleep 30
