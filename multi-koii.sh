@@ -136,7 +136,7 @@ show_stake() {
   staking_address="$(koii-keygen pubkey koii-keys/koii-${number}/namespace/${wallet_name}.json 2>/dev/null || echo 'None')"
 
   raw_stake=$(echo "$task_info" | jq --arg ADDRESS "$staking_address" '.stake_list[$ADDRESS]')
-  stake=$( printf '%.3f\n' $(echo "scale=2; $raw_stake / 1000000000" | bc -l 2>/dev/null || echo "None"))
+  stake=$( printf '%.3f\n' $(echo "scale=2; $raw_stake / 1000000000" | bc -l 2>/dev/null ) || echo "Error")
   echo "$stake"
 }
 
