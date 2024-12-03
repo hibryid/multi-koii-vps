@@ -127,7 +127,7 @@ sudo bash multi-koii.sh unstake 1
 ### If you want to run a GUI node (webtop)
 Do not run more than 4 nodes per 1 ip. Proxies are not supported here.
 Edit the `.env` file and be sure that password is set.
-You and only you are responsible is any cases.
+You and only you are responsible in any cases.
 
 ```bash
 bash multi-koii.sh up-webtop 1
