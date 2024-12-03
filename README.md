@@ -133,7 +133,7 @@ You and only you are responsible in any cases.
 bash multi-koii.sh up-webtop 1
 ```
 The script will give you the exact ip and port to open it in browser.
-To setup a https connection you may try to use "nginx proxy manager".
+To set up a https connection you may try to use "nginx proxy manager".
 
 ### If you need to set any custom ids, tasks and variables for nodes
 And edit them in the format you like, according to the examples. \
