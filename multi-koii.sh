@@ -136,7 +136,7 @@ show_stake() {
   staking_address="$(koii-keygen pubkey koii-keys/koii-${number}/namespace/${wallet_name}.json 2>/dev/null || echo 'None')"
 
   raw_stake=$(echo "$task_info" | jq --arg ADDRESS "$staking_address" '.stake_list[$ADDRESS]')
-  stake=$( printf '%.3f\n' $(echo "scale=2; $raw_stake / 1000000000" | bc -l 2>/dev/null ) || echo "Error")
+  stake=$( printf '%.2f\n' $(echo "scale=2; $raw_stake / 1000000000" | bc -l 2>/dev/null ) || echo "Error")
   echo "$stake"
 }
 
@@ -228,7 +228,7 @@ if [[ "$COMMAND" == "set-range" ]];then
   exit 0
 fi
 
-if [[ -z "$2" ]];then
+if [ -z "$2" ];then
   SC_NUMBER=$NODES_RANGE
 else
   SC_NUMBER=$2
@@ -237,6 +237,13 @@ fi
 if [ -z "$SC_NUMBER" ]; then
   echo "No nodes range provided"
   exit 1
+fi
+
+if [[ "$COMMAND" == "up-webtop" ]];then
+  if [ -z "$WEBTOP_PASSWORD" ]; then
+    echo "Error: no password for webtop was provided"
+    exit 1
+  fi
 fi
 
 if [[ $SC_NUMBER == *-* ]]; then
@@ -301,15 +308,22 @@ main() {
       NUMBER=$i TASK_IDS=$current_task_ids TASK_STAKES=$current_task_stakes PROXY=$current_proxy \
               NODE_VARS=$current_node_vars NETNUMBER=$net_number HOST_UID=$(id -u) HOST_GID=$(id -g) \
                 docker compose -p "$i" -f "$compose_file" up -d
+
+    elif [[ "$COMMAND" == "up-webtop" ]];then
+      echo "starting koii-$i with webtop port: $WEBTOP_IP:$((30000+i))"
+      NUMBER=$i NETNUMBER=$net_number CUSTOM_USER=$WEBTOP_CUSTOM_USER PASSWORD=$WEBTOP_PASSWORD \
+            IP=$WEBTOP_IP PORT=$((30000+i)) HOST_UID=$(id -u) HOST_GID=$(id -g) \
+                docker compose -p "$i" -f "docker-compose-webtop.yml" up -d
+
     elif [[ "$COMMAND" == "restart" ]];then
       echo "Restarting koii-$i.."
-      docker restart "koii-$i"
+      docker compose -p "$i" restart
 
     elif [[ "$COMMAND" == "down" ]];then
       docker compose -p "$i" down -v
 
     elif [[ "$COMMAND" == "kill" ]];then
-      docker kill "koii-$i"
+      docker compose -p "$i" kill
       docker compose -p "$i" down -v
 
     elif [[ "$COMMAND" == "show-addresses" ]];then
@@ -381,6 +395,7 @@ main() {
       echo "
       commands are:
       up
+      up-webtop
       down
       show-balances
       show-rewards

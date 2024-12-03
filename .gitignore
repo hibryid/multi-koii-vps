@@ -4,7 +4,6 @@ venv/
 *-lock.json
 package.json
 
-
 .env
 koii-keys/
 configs/docker/koii-*
@@ -20,3 +19,6 @@ tests/
 test*.*
 docker-compose-*.yml
 send.sh
+
+
+!docker-compose-webtop.yml
