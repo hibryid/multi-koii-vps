@@ -1,0 +1,29 @@
+services:
+  webtop:
+    image: lscr.io/linuxserver/webtop:ubuntu-kde
+    container_name: koii-webtop-${NUMBER}
+    environment:
+      - PUID=${HOST_UID}
+      - PGID=${HOST_GID}
+      - CUSTOM_USER=${CUSTOM_USER}
+      - PASSWORD=${PASSWORD}
+      - TZ=Etc/UTC
+    volumes:
+      - "./configs/docker/webtop/config/install.sh:/custom-cont-init.d/install.sh:ro"
+      - "./configs/docker/webtop/config/update.sh:/config/Desktop/update.sh:ro"
+      - "./configs/docker/webtop/config/update_how_to.txt:/config/Desktop/update_how_to.txt:ro"
+      - "./koii-keys/koii-webtop-${NUMBER}/wallet:/config/.config/KOII-Desktop-Node/wallets"
+      - "./koii-keys/koii-webtop-${NUMBER}/namespace:/config/.config/KOII-Desktop-Node/namespace"
+
+#      - "./koii-keys/koii-webtop/wallet:/config/.config/KOII-Desktop-Node/wallets/"
+#      - "./koii-keys/koii-webtop/namespace:/config/.config/KOII-Desktop-Node/namespace/"
+    ports:
+      - ${PORT}:3000
+
+    shm_size: "1gb"
+#    runtime: sysbox-runc
+#    privileged: true
+    security_opt:
+      - seccomp=unconfined
+    restart: unless-stopped
+

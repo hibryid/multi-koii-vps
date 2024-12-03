@@ -18,7 +18,5 @@ tests/
 *.tar
 test*.*
 docker-compose-*.yml
-send.sh
-
-
 !docker-compose-webtop.yml
+send.sh
