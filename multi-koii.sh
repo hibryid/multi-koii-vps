@@ -244,6 +244,11 @@ if [[ "$COMMAND" == "up-webtop" ]];then
     echo "Error: no password for webtop was provided"
     exit 1
   fi
+  if [[ "$WEBTOP_IP" == "0.0.0.0" ]];then
+    host_ip=$(curl -m 10 -s https://httpbin.org/ip | jq --raw-output .origin)
+  else
+    host_ip="$WEBTOP_IP"
+  fi
 fi
 
 if [[ $SC_NUMBER == *-* ]]; then
@@ -310,9 +315,17 @@ main() {
                 docker compose -p "$i" -f "$compose_file" up -d
 
     elif [[ "$COMMAND" == "up-webtop" ]];then
-      echo "starting koii-$i with webtop port: $WEBTOP_IP:$((30000+i))"
+      echo "starting koii-$i with webtop port: http://$host_ip:$((30000+i))"
+      if [ "$(id -u)" == 0 ]; then
+        custom_uid=1000
+        custom_gid=1000
+      else
+        custom_uid=$(id -u)
+        custom_gid=$(id -g)
+      fi
+
       NUMBER=$i NETNUMBER=$net_number CUSTOM_USER=$WEBTOP_CUSTOM_USER PASSWORD=$WEBTOP_PASSWORD \
-            IP=$WEBTOP_IP PORT=$((30000+i)) HOST_UID=$(id -u) HOST_GID=$(id -g) \
+            IP=$WEBTOP_IP PORT=$((30000+i)) HOST_UID=$custom_uid HOST_GID=$custom_gid \
                 docker compose -p "$i" -f "docker-compose-webtop.yml" up -d
 
     elif [[ "$COMMAND" == "restart" ]];then

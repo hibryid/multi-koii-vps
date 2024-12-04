@@ -35,13 +35,13 @@ RUN sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plu
 # RUN sudo groupadd docker
 RUN sudo usermod -aG docker root
 
-RUN sh -c "$(curl -sSfL https://raw.githubusercontent.com/koii-network/k2-release/master/k2-install-init.sh)"
+RUN sh -c "$(curl -sSfL https://raw.githubusercontent.com/koii-network/k2-release/master/k2-install-init_v1.16.4.sh)"
 RUN echo 'export PATH="/root/.local/share/koii/install/active_release/bin:$PATH"' >> /root/.bashrc
 RUN . /root/.bashrc
 
 RUN cd /root && git clone https://github.com/koii-network/VPS-task && cd VPS-task
-RUN sed -i 's/ENVIRONMENT="development"/ENVIRONMENT="production"/g' /root/VPS-task/.env-local
-RUN sed -i 's/K2_NODE_URL="https:\/\/testnet.koii.live"/K2_NODE_URL="https:\/\/testnet.koii.network"/g' /root/VPS-task/.env-local
+RUN sed -i 's/ENVIRONMENT=".*"/ENVIRONMENT="production"/g' /root/VPS-task/.env-local
+RUN sed -i 's/K2_NODE_URL=".*"/K2_NODE_URL="https:\/\/testnet.koii.network"/g' /root/VPS-task/.env-local
 
 # COPY ./images /images
 COPY script.sh /root/start.sh

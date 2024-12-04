@@ -49,7 +49,7 @@ if [ -e "$file_path" ]; then
     echo "Wallet exists!" >> /root/res.txt
 else
     echo "Wallet does not exist!" >> /root/res.txt
-    koii-keygen new --no-bip39-passphrase -o /root/.config/koii/id.json | tee /root/.config/koii/seeds.txt
+    koii-keygen new --no-bip39-passphrase -o /root/.config/koii/id.json >> /root/.config/koii/seeds.txt
     chown -R $HOST_UID:$HOST_GID /root/.config/koii/
     # chmod -R $HOST_UID:$HOST_GID /root/.config/koii/wallet/
 fi
@@ -61,11 +61,10 @@ re='^[0-9]+([.][0-9]+)?$'
 while true; do
     koii_balance=$(koii balance | awk '{print $1}')
     if [[ $koii_balance == "0" ]];then
-        echo "Send the needed amount of $((INITIAL_STAKING_WALLET_BALANCE*2+1)) KOII: $(koii address)"
+        echo "Send the needed amount of $((INITIAL_STAKING_WALLET_BALANCE*2+2)) KOII: $(koii address)"
         sleep 10
     elif [ $(echo "$koii_balance > 0.0" | bc) ];then
         echo "OK: $koii_balance"
-        echo "ip: $(curl -s 2ip.io)"
         break
     else
         echo "some error happened"
@@ -93,9 +92,9 @@ if [ -e "$file_path" ]; then
     # source /root/.profile
 else
     sed -i "s/:latest/$KOII_IMAGE_VERSION/g" /root/VPS-task/docker-compose.yaml
-    sed -i "s/INITIAL_STAKING_WALLET_BALANCE=10/INITIAL_STAKING_WALLET_BALANCE=$INITIAL_STAKING_WALLET_BALANCE/g" /root/VPS-task/.env-local
-    sed -i "s/TASKS=\"AXcd6MctmDUQo3XDeBNa4NBAi4tfBYDpt4Adxyai3Do3\"/TASKS=\"$TASK_IDS\"/g" /root/VPS-task/.env-local
-    sed -i "s/TASK_STAKES=5/TASK_STAKES=$TASK_STAKES/g" /root/VPS-task/.env-local
+    sed -i "s/INITIAL_STAKING_WALLET_BALANCE=.*/INITIAL_STAKING_WALLET_BALANCE=$INITIAL_STAKING_WALLET_BALANCE/g" /root/VPS-task/.env-local
+    sed -i "s/TASKS=\".*\"/TASKS=\"$TASK_IDS\"/g" /root/VPS-task/.env-local
+    sed -i "s/TASK_STAKES=.*/TASK_STAKES=$TASK_STAKES/g" /root/VPS-task/.env-local
     echo "$NODE_VARS" >> /root/VPS-task/.env-local
 
     sed -i 's/command: yarn initialize-start/entrypoint: ["\/bin\/sh", "-c", "apt-get update \&\& apt-get install -y --no-install-recommends libglib2.0-dev libgconf-2-4 libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf2.0-0 libgtk-3-0 libgbm-dev libnss3-dev libxss-dev libasound2 xorg openbox libatk-adaptor libgtk-3-0 \&\& exec yarn initialize-start"]/g' /root/VPS-task/docker-compose.yaml
