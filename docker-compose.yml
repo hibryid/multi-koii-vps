@@ -24,7 +24,7 @@ services:
       - TASK_STAKES=${TASK_STAKES}
       - NODE_VARS=${NODE_VARS}
       - KOII_IMAGE_VERSION=${KOII_IMAGE_VERSION}
-    restart: always
+    restart: unless-stopped
 
 
 networks:
