@@ -43,7 +43,21 @@ ask_user() {
 }
 
 update_images() {
-  if ask_user "download koii image?"; then
+
+  # arch check
+  arch=$(uname -m)
+  arch_list="x86_64 amd64a"
+  if ! echo "$arch_list" | grep -wqi "$arch"; then
+    if [[ -z "$(find "/proc/sys/fs/binfmt_misc" -maxdepth 1 -name \*qemu-\*)" ]]; then
+      echo "It appears that your system architecture is neither 'x86_64' nor 'amd64'."
+      if ask_user "Would you like to enable the emulator to support the execution of amd64 nodes?"; then
+        docker run --privileged --rm tonistiigi/binfmt --install all
+        echo "Done."
+      fi
+    fi
+  fi
+
+  if ask_user "Would you like to download koii image?"; then
     folder="images"
     if [ ! -d "$folder" ]; then
       mkdir -p "$folder"
@@ -54,7 +68,7 @@ update_images() {
   fi
 
 
-  if ask_user "rebuild images?"; then
+  if ask_user "Would you like to rebuild images?"; then
     cd configs/docker/koii && docker build --build-arg UID="$(id -u)" --build-arg GID="$(id -g)" -t local/koii . && cd - || return
 #		cd configs/docker/koii-checker && docker build --build-arg UID="$(id -u)" --build-arg GID="$(id -g)" -t local/koii-checker . && cd - || return
 #		cd configs/docker/koii-dind && docker build --build-arg UID="$(id -u)" --build-arg GID="$(id -g)" -t local/koii-dind . && cd - || return
@@ -62,7 +76,6 @@ update_images() {
   fi
 
 }
-
 
 unstake() {
   echo 0

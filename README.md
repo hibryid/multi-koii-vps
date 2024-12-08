@@ -5,7 +5,15 @@ It is a script that can help run Koii nodes on vps.
 ## Disclaimer
 ***
 The project is released as is.
-It was designed to easily configure in the terminal
+It was designed to easily configure koii nodes in the terminal.
+
+Pros:
+1. Much more user-friendly comparing to the official documentation
+2. Multiple nodes support
+3. Proxy support (for cli nodes only)
+4. GUI support for VPS.
+5. Possible emulation(!) of amd64 containers for arm64 architecture
+(No guarantee for weak devices like Raspberry Pi)
 
 Requirements:
 1. Ubuntu 20+ is required
@@ -103,7 +111,7 @@ bash multi-koii.sh show-submissions 1
 
 # Show wallet addresses
 # Send koii and kpl tokens only to the system key address
-bash multi-koii.sh show-addresses 0001
+bash multi-koii.sh show-addresses 1
 
 # Show rewards
 bash multi-koii.sh show-rewards 1
