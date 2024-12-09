@@ -69,7 +69,7 @@ update_images() {
 
 
   if ask_user "Would you like to rebuild images?"; then
-    cd configs/docker/koii && docker build --build-arg UID="$(id -u)" --build-arg GID="$(id -g)" -t local/koii . && cd - || return
+    cd configs/docker/koii && docker build --platform linux/amd64 --build-arg UID="$(id -u)" --build-arg GID="$(id -g)" -t local/koii . && cd - || return
 #		cd configs/docker/koii-checker && docker build --build-arg UID="$(id -u)" --build-arg GID="$(id -g)" -t local/koii-checker . && cd - || return
 #		cd configs/docker/koii-dind && docker build --build-arg UID="$(id -u)" --build-arg GID="$(id -g)" -t local/koii-dind . && cd - || return
     # cd configs/docker/koii-alt && docker build --build-arg UID="$(id -u)" --build-arg GID="$(id -g)" -t local/koii-alt . && cd - || return
