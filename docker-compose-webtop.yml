@@ -23,6 +23,7 @@ services:
     shm_size: "1gb"
 #    runtime: sysbox-runc
 #    privileged: true
+    platform: linux/amd64
     security_opt:
       - seccomp=unconfined
     restart: unless-stopped
