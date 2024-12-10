@@ -332,11 +332,9 @@ main() {
       if [ "$(id -u)" == 0 ]; then
         custom_uid=1000
         custom_gid=1000
-        custom_user=abc
       else
         custom_uid=$(id -u)
         custom_gid=$(id -g)
-        custom_user=root
       fi
 
       NUMBER=$i NETNUMBER=$net_number CUSTOM_USER=$WEBTOP_CUSTOM_USER PASSWORD=$WEBTOP_PASSWORD \
@@ -347,15 +345,18 @@ main() {
       echo "Restarting koii-$i.."
       docker compose -p "$i" restart
 
-    elif [[ "$COMMAND" == "down" ]];then
-      docker compose -p "$i" down -v
-
     elif [[ "$COMMAND" == "stop" ]];then
       docker compose -p "$i" stop
 
+    elif [[ "$COMMAND" == "down" ]];then
+      docker compose -p "$i" down
+
+    elif [[ "$COMMAND" == "down-v" ]];then
+      docker compose -p "$i" down -v
+
     elif [[ "$COMMAND" == "kill" ]];then
       docker compose -p "$i" kill
-      docker compose -p "$i" down -v
+      docker compose -p "$i" down
 
     elif [[ "$COMMAND" == "show-addresses" ]];then
       get_addresses "$i"

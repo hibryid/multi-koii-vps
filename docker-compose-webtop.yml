@@ -8,15 +8,16 @@ services:
       - CUSTOM_USER=${CUSTOM_USER}
       - PASSWORD=${PASSWORD}
       - TZ=Etc/UTC
+
     volumes:
       - "./configs/docker/webtop/config/install.sh:/custom-cont-init.d/install.sh:ro"
       - "./configs/docker/webtop/config/update.sh:/config/Desktop/update.sh:ro"
       - "./configs/docker/webtop/config/update_how_to.txt:/config/Desktop/update_how_to.txt:ro"
-      - "./koii-keys/koii-webtop-${NUMBER}/wallet:/config/.config/KOII-Desktop-Node/wallets"
-      - "./koii-keys/koii-webtop-${NUMBER}/namespace:/config/.config/KOII-Desktop-Node/namespace"
+      - "./koii-keys/koii-webtop-${NUMBER}/wallet:/config/.config/KOII-Desktop-Node/wallets:rw"
+      - "./koii-keys/koii-webtop-${NUMBER}/namespace:/config/.config/KOII-Desktop-Node/namespace:rw"
+      - "koii-data:/config/.config/KOII-Desktop-Node:rw"
 
-#      - "./koii-keys/koii-webtop/wallet:/config/.config/KOII-Desktop-Node/wallets/"
-#      - "./koii-keys/koii-webtop/namespace:/config/.config/KOII-Desktop-Node/namespace/"
+
     ports:
       - ${PORT}:3000
 
@@ -28,3 +29,5 @@ services:
       - seccomp=unconfined
     restart: unless-stopped
 
+volumes:
+  koii-data:
