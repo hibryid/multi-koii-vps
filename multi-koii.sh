@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/bash -i
+shopt -s expand_aliases
 
 source .env
 COMMAND=$1
@@ -19,6 +20,9 @@ task_ids_aka_array=$(echo -e "$(cat $task_ids_file 2>/dev/null)\n$DEFAULT_TASK_I
 old_task_ids_aka_array=$(echo -e "$(cat $old_task_ids_file 2>/dev/null)\n$DEFAULT_OLD_TASK_IDS" | \
                           grep -oP '\K[A-Za-z0-9]+' | sort | uniq | tr '\n' ' ')
 
+if [ -n "$(koii --version >/dev/null 2>&1 || echo 1)" ]; then
+  alias koii="docker run --rm --pull=never -v ./koii-keys:/koii-keys:ro local/cli koii"
+fi
 
 ask_user() {
   question=$1
@@ -28,11 +32,9 @@ ask_user() {
     response=${response:-$default_choice}  # Use default choice if response is empty
     case "$response" in
       [yY][eE][sS]|[yY])
-        echo "Continuing..."
         return 0
         ;;
       [nN][oO]|[nN])
-        echo "Stopping..."
         return 1
         ;;
       *)
@@ -68,13 +70,19 @@ update_images() {
   fi
 
 
-  if ask_user "Would you like to rebuild images?"; then
-    cd configs/docker/koii && docker build --platform linux/amd64 --build-arg UID="$(id -u)" --build-arg GID="$(id -g)" -t local/koii . && cd - || return
-#		cd configs/docker/koii-checker && docker build --build-arg UID="$(id -u)" --build-arg GID="$(id -g)" -t local/koii-checker . && cd - || return
-#		cd configs/docker/koii-dind && docker build --build-arg UID="$(id -u)" --build-arg GID="$(id -g)" -t local/koii-dind . && cd - || return
-    # cd configs/docker/koii-alt && docker build --build-arg UID="$(id -u)" --build-arg GID="$(id -g)" -t local/koii-alt . && cd - || return
+  if ask_user "Would you like to rebuild koii image?"; then
+    cd configs/docker/koii && docker build --platform linux/amd64 --build-arg UID="$(id -u)" --build-arg GID="$(id -g)" -t local/koii . && cd - || cd - || exit 1
   fi
+  if [ -n "$(koii --version >/dev/null 2>&1 || echo 1)" ]; then
+    echo "Looks like Koii CLI is not installed."
+    if ask_user "Would you like to install CLI via docker?"; then
+      cd configs/docker/cli && docker build --platform linux/amd64 -t local/cli . && cd - || cd - || exit 1
 
+      echo "Koii CLI is installed"
+      echo "If you want it to work outside of the script, then add this command in your ~/.bashrc or ~/.bash_profile"
+      echo 'alias koii="docker run --rm --pull=never -v ./koii-keys:/koii-keys:ro local/cli koii"'
+    fi
+  fi
 }
 
 unstake() {
@@ -281,7 +289,7 @@ fi
 # check if network is created
 max_net_number=$(awk 'BEGIN { rounded = int('"$((10#${total_nodes}))/250"'+0.999999); print rounded }')
 for i in $(seq $max_net_number); do
-  docker network create koii-net-$i 1>/dev/null 2>/dev/null
+  docker network create koii-net-$i >/dev/null 2>&1
 done
 
 
@@ -430,6 +438,7 @@ main() {
       up-webtop
       stop
       down
+      down-v
       show-balances
       show-rewards
       show-stakes
@@ -437,7 +446,7 @@ main() {
       claim-from-old-tasks
       claim-to-nodes
       set-range
-      COMMAND <NODE_NUMBER>
+      <COMMAND> <NODE_NUMBER>
       "
 
       exit 1

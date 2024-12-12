@@ -11,6 +11,7 @@ services:
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     privileged: true
+    pull_policy: never
     devices:
       - /dev/net/tun:/dev/net/tun
     environment:
