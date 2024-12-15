@@ -19,7 +19,7 @@ Requirements:
 2. You can run any amount of nodes, but up to 4 nodes per 1 ip only. Please keep it in mind
 ***
 
-### Prepare the system
+### 1. Prepare the system
 <details>
     <summary>On Ubuntu (spoiler)</summary>
 
@@ -68,33 +68,44 @@ source ~/.bashrc
     <summary>On Arch (Soon)</summary>
 </details>
 
-### Git clone and go to the project
+### 2. Git clone and go to the project
 ```bash
 git clone https://github.com/hibryid/multi-koii-vps.git
 cd multi-koii-vps
 ```
 
-### Install some libraries
+### 3. Install some libraries
 ```bash
 npm install @_koii/web3.js @_koii/create-task-cli
 npm install -D tsx
 ```
 
-### Edit the .env file
+### 4. Edit the .env file
 ```bash
 # Copy and edit for your settings
 cp .env.example .env
 ```
 
-### Update images
+### 5. Update images
 ```bash
 bash multi-koii.sh update-images
 ```
 
+### If you want to run a GUI node (webtop)
+Now everything is good to go.\
+Do not run more than 4 nodes per 1 ip. Proxies are not supported here.
+Edit the `.env` file and be sure that password is set.
+You and only you are responsible in any cases.
+```bash
+bash multi-koii.sh up-webtop 1
+```
+
 ### Commands for running nodes:
+It is an advanced way to manage multiple nodes.\
 Here is a list of examples.\
 You can use any of these range number formats: `1-10` or `0001-0010`. \
 (Please, keep in mind: up to 4 nodes per 1 ip only) \
+I personally prefer the `0001-0010` format because each node can have its own serial number among servers.\
 The most general typical format: `<command> <a number or a range on nodes>`
 ```bash
 # Running a single node
@@ -147,14 +158,6 @@ bash multi-koii.sh claim 1
 sudo bash multi-koii.sh unstake 1
 ```
 
-### If you want to run a GUI node (webtop)
-Do not run more than 4 nodes per 1 ip. Proxies are not supported here.
-Edit the `.env` file and be sure that password is set.
-You and only you are responsible in any cases.
-
-```bash
-bash multi-koii.sh up-webtop 1
-```
 The script will give you the exact ip and port to open it in browser.
 To set up a https connection you may try to use "nginx proxy manager".
 
@@ -168,9 +171,9 @@ cp configs/nodes/example-node-vars configs/nodes/node-vars
 cp configs/nodes/example-task-ids configs/nodes/task-ids
 ```
 
-
 ### Additional info / Credits
 This script can be identified as a helper to install some finished products of other projects.\
 Anyway, according to their licences I have to list them:\
 1. [Binfmt](https://github.com/tonistiigi/binfmt) - cross-platform emulator collection distributed with Docker images.
 2. [tun2socks](https://github.com/xjasonlyu/tun2socks) - powered by gVisor TCP/IP stack
+3. [docker-webtop](https://github.com/linuxserver/docker-webtop) - Ubuntu, Alpine, Arch, and Fedora based Webtop images, Linux in a web browser supporting popular desktop environments.
