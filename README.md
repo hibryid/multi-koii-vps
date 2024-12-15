@@ -16,18 +16,21 @@ Pros:
 (No guarantee for weak devices like Raspberry Pi)
 
 Requirements:
-1. Ubuntu 20+ is required
-2. You can run up to 4 nodes per 1 ip only. Please keep it in mind
+1. GNU/Linux distro is required (The best for newbies is Ubuntu 20+)
+2. You can run any amount of nodes, but up to 4 nodes per 1 ip only. Please keep it in mind
 ***
 
+### Prepare the system
+<details>
+    <summary>On Ubuntu (spoiler)</summary>
 
-### Install required tools
+#### Install required tools
 ```bash
 sudo apt-get update
 sudo apt-get install -y ca-certificates curl git jq zip unzip
 ```
 
-### Install docker if you don't have it
+#### Install docker if you don't have it
 ```bash
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
@@ -47,18 +50,21 @@ newgrp docker
 reset
 ```
 
+#### Install nodejs
+```bash
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - &&\
+sudo apt-get install -y nodejs
+```
+</details>
+
+<details>
+    <summary>On Arch (Soon)</summary>
+</details>
+
 ### Git clone and go to the project
 ```bash
 git clone https://github.com/hibryid/multi-koii-vps.git
 cd multi-koii-vps
-```
-
-### Install nodejs and some libraries
-```bash
-curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - &&\
-sudo apt-get install -y nodejs
-npm install @_koii/web3.js @_koii/create-task-cli
-npm install -D tsx
 ```
 
 ### Install koii cli
@@ -68,6 +74,11 @@ echo 'export PATH="~/.local/share/koii/install/active_release/bin:$PATH"' > ~/.b
 source ~/.bashrc
 ```
 
+### Install some libraries
+```bash
+npm install @_koii/web3.js @_koii/create-task-cli
+npm install -D tsx
+```
 
 ### Updating images
 ```bash
@@ -152,3 +163,10 @@ cp configs/nodes/example-old-task-ids configs/nodes/old-task-ids
 cp configs/nodes/example-node-vars configs/nodes/node-vars
 cp configs/nodes/example-task-ids configs/nodes/task-ids
 ```
+
+
+### Additional info / Credits
+This script can be identified as a helper to install some finished products of other projects.\
+Anyway, according to their licences I have to list them:\
+1. [Binfmt](https://github.com/tonistiigi/binfmt) - cross-platform emulator collection distributed with Docker images.
+2. [tun2socks](https://github.com/xjasonlyu/tun2socks) - powered by gVisor TCP/IP stack
