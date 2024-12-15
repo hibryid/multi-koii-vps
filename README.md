@@ -99,6 +99,7 @@ You and only you are responsible in any cases.
 ```bash
 bash multi-koii.sh up-webtop 1
 ```
+It will give you an address like `http://127.0.0.1:30001` where you can go and run a desktop node on your VPS. 
 
 ### Commands for running nodes:
 It is an advanced way to manage multiple nodes.\
