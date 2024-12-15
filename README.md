@@ -1,5 +1,4 @@
 # multi-koii-vps
-
 It is a script that can help run Koii nodes on vps.
 
 ## Disclaimer
@@ -55,6 +54,14 @@ reset
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - &&\
 sudo apt-get install -y nodejs
 ```
+
+### Install koii cli (You can skip this step. It will not work on arm too)
+```bash
+sh -c "$(curl -sSfL https://raw.githubusercontent.com/koii-network/k2-release/master/k2-install-init_v1.16.4.sh)"
+echo 'export PATH="~/.local/share/koii/install/active_release/bin:$PATH"' > ~/.bashrc
+source ~/.bashrc
+```
+
 </details>
 
 <details>
@@ -67,23 +74,20 @@ git clone https://github.com/hibryid/multi-koii-vps.git
 cd multi-koii-vps
 ```
 
-### Install koii cli
-```bash
-sh -c "$(curl -sSfL https://raw.githubusercontent.com/koii-network/k2-release/master/k2-install-init_v1.16.4.sh)"
-echo 'export PATH="~/.local/share/koii/install/active_release/bin:$PATH"' > ~/.bashrc
-source ~/.bashrc
-```
-
 ### Install some libraries
 ```bash
 npm install @_koii/web3.js @_koii/create-task-cli
 npm install -D tsx
 ```
 
-### Updating images
+### Edit the .env file
 ```bash
 # Copy and edit for your settings
 cp .env.example .env
+```
+
+### Update images
+```bash
 bash multi-koii.sh update-images
 ```
 
@@ -156,7 +160,7 @@ To set up a https connection you may try to use "nginx proxy manager".
 
 ### If you need to set any custom ids, tasks and variables for nodes
 And edit them in the format you like, according to the examples. \
-The number of a raw is the number of the node
+The serial number of a raw refers to the serial number of the node
 ```bash
 cp configs/nodes/example-proxies configs/nodes/proxies
 cp configs/nodes/example-old-task-ids configs/nodes/old-task-ids
