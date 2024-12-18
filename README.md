@@ -101,7 +101,7 @@ bash multi-koii.sh up-webtop 1
 ```
 It will give you an address like `http://127.0.0.1:30001` where you can go and run a desktop node on your VPS. 
 
-### Commands for running nodes:
+### Commands for running CLI-VPS nodes:
 It is an advanced way to manage multiple nodes.\
 Here is a list of examples.\
 You can use any of these range number formats: `1-10` or `0001-0010`. \
@@ -174,7 +174,7 @@ cp configs/nodes/example-task-ids configs/nodes/task-ids
 
 ### Additional info / Credits
 This script can be identified as a helper to install some finished products of other projects.\
-Anyway, according to their licences I have to list them:\
+Anyway, according to their licences I have to list them:
 1. [Binfmt](https://github.com/tonistiigi/binfmt) - cross-platform emulator collection distributed with Docker images.
 2. [tun2socks](https://github.com/xjasonlyu/tun2socks) - powered by gVisor TCP/IP stack
 3. [docker-webtop](https://github.com/linuxserver/docker-webtop) - Ubuntu, Alpine, Arch, and Fedora based Webtop images, Linux in a web browser supporting popular desktop environments.
