@@ -26,7 +26,7 @@ Requirements:
 #### Install required tools
 ```bash
 sudo apt-get update
-sudo apt-get install -y ca-certificates curl git jq zip unzip
+sudo apt-get install -y ca-certificates curl git jq zip unzip micro
 ```
 
 #### Install docker if you don't have it
@@ -80,18 +80,20 @@ npm install @_koii/web3.js @_koii/create-task-cli
 npm install -D tsx
 ```
 
-### 4. Edit the .env file
+### 4. Copy the .env file
 ```bash
-# Copy and edit for your settings
 cp .env.example .env
 ```
 
-### 5. Update images
+## If you want just to run a GUI node (webtop)
+
+### 5. Setup GUI
+You can do it by this command or by manually editing the `.env` file
 ```bash
-bash multi-koii.sh update-images
+bash multi-koii.sh setup-gui
 ```
 
-### If you want to run a GUI node (webtop)
+### How to run a GUI node (webtop)
 Now everything is good to go.\
 Do not run more than 4 nodes per 1 ip. Proxies are not supported here.
 Edit the `.env` file and be sure that password is set.
@@ -100,6 +102,21 @@ You and only you are responsible in any cases.
 bash multi-koii.sh up-webtop 1
 ```
 It will give you an address like `http://127.0.0.1:30001` where you can go and run a desktop node on your VPS. 
+If you selected it to be accessed remotely, then you may have to open the given port. 
+
+
+## Area for advanced users to run CLI-VPS nodes:
+
+### 5. Edit the .env file
+```bash
+# Edit the .env file for your settings with nano or micro
+nano .env
+```
+
+### 6. Update images
+```bash
+bash multi-koii.sh update-images
+```
 
 ### Commands for running CLI-VPS nodes:
 It is an advanced way to manage multiple nodes.\

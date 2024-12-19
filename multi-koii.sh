@@ -2,6 +2,9 @@
 shopt -s expand_aliases
 
 source .env
+if [ ! -f ".env" ];then
+  cp .env.example .env
+fi
 COMMAND=$1
 SC_NUMBER=$NODES_RANGE
 
@@ -210,6 +213,29 @@ function get_task_info() {
     sed '/^On KPL Task Operations/d;/On Koii Task Operations/d' |\
     jq --arg ID "$i" --arg TYPE "$task_type" '. + {"task_id": $ID, "task_type": $TYPE}'
 }
+
+if [[ "$COMMAND" == "setup-gui" ]];then
+  if [ ! -f ".env" ];then
+    cp .env.example .env
+  fi
+
+  echo "This password will be needed to log into GUI node"
+  echo "Please avoid using special characters, but make it strong enough"
+  read -r -s -p "Enter a new password: " PASS
+  sed -i "s/WEBTOP_PASSWORD=\".*\"/WEBTOP_PASSWORD=\"$PASS\"/g" .env
+  echo -e "\nPassword is set."
+
+  if ask_user "Would you like to access the node remotely?"; then
+    sed -i 's/WEBTOP_IP=".*"/WEBTOP_IP="0.0.0.0"/g' .env
+    echo -e "Done.\nYou may have to configure your firewall to access the node remotely in the future"
+  else
+    sed -i 's/WEBTOP_IP=".*"/WEBTOP_IP="127.0.0.1"/g' .env
+    echo -e "Done.\nGUI node will be accessed via 127.0.0.1 by default"
+  fi
+  exit
+fi
+
+
 
 tasks_responses=()
 if [[ "$COMMAND" == "show-rewards" || "$COMMAND" == "claim" ||
@@ -446,6 +472,7 @@ main() {
       claim-from-old-tasks
       claim-to-nodes
       set-range
+      setup-gui
       <COMMAND> <NODE_NUMBER>
       "
 
