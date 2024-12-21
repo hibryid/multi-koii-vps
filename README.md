@@ -92,6 +92,10 @@ You can do it by this command or by manually editing the `.env` file
 ```bash
 bash multi-koii.sh setup-gui
 ```
+If you have an ARM device, prepare some images to continue:
+```
+bash multi-koii.sh update-images
+```
 
 ### How to run a GUI node (webtop)
 Now everything is good to go.\
