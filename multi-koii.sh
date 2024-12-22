@@ -7,7 +7,7 @@ if [ ! -f ".env" ];then
 fi
 COMMAND=$1
 SC_NUMBER=$NODES_RANGE
-
+THIRD_SC_NUMBER=$3
 echo "=== The command $COMMAND is selected, processing.. ==="
 
 nodes_configs_folder="configs/nodes"
@@ -94,6 +94,20 @@ unstake() {
 
 claim() {
   exho 0
+}
+
+limit_memory() {
+	number=$1
+	memory=$2
+	bash -c "docker update --memory-swap $memory --memory $memory koii-$number" >/dev/null 2>&1 &&
+	  echo "koii-$number: done" || echo "koii-$number: error"
+}
+
+limit_cpu() {
+	number=$1
+	cpus=$2
+	bash -c "docker update --cpus $cpus koii-$number" >/dev/null 2>&1 &&
+	  echo "koii-$number: done" || echo "koii-$number: error"
 }
 
 get_submissions() {
@@ -275,11 +289,20 @@ if [[ "$COMMAND" == "set-range" ]];then
   exit 0
 fi
 
-if [ -z "$2" ];then
-  SC_NUMBER=$NODES_RANGE
+
+if [[ -z "$2" && "$COMMAND" != "limit-cpu" ]]; then
+	SC_NUMBER=$NODES_RANGE
+elif [[ -z "$3" && "$COMMAND" == "limit-cpu" ]];then
+	SC_NUMBER=$NODES_RANGE
 else
-  SC_NUMBER=$2
+	SC_NUMBER=$2
 fi
+
+#if [ -z "$2" ];then
+#  SC_NUMBER=$NODES_RANGE
+#else
+#  SC_NUMBER=$2
+#fi
 
 if [ -z "$SC_NUMBER" ]; then
   echo "No nodes range provided"
@@ -440,6 +463,18 @@ main() {
         fi
       done
 
+    elif [[ "$COMMAND" == "limit-ram" ]];then
+      limit_memory "$i" "$THIRD_SC_NUMBER"
+
+    elif [[ "$COMMAND" == "limit-cpu" ]];then
+      if [[ -z $THIRD_SC_NUMBER ]]; then
+        limit_cpu "$i" "$SC_NUMBER"
+        echo "koii-$i: done"
+      else
+        limit_cpu "$i" "$THIRD_SC_NUMBER"
+        echo "koii-$i: done"
+      fi
+
     elif [[ "$COMMAND" == "claim" || "$COMMAND" == "claim-to-nodes" || "$COMMAND" == "claim-from-old-tasks" || "$COMMAND" == "withdraw-unstaked" ]];then
       balance=$(get_rewards "$i" "$task")
       echo "koii-$i: $balance KOII"
@@ -471,6 +506,8 @@ main() {
       claim
       claim-from-old-tasks
       claim-to-nodes
+      limit-cpu
+      limit-ram
       set-range
       setup-gui
       <COMMAND> <NODE_NUMBER>
