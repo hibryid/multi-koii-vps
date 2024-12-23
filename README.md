@@ -185,6 +185,9 @@ bash multi-koii.sh limit-cpu 1 4
 # limit memory
 # Example: 10G, 2500M
 bash multi-koii.sh limit-ram 1 5G
+
+# create a backup of all keys
+bash multi-koii.sh backup
 ```
 
 The script will give you the exact ip and port to open it in browser.

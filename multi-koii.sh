@@ -96,6 +96,19 @@ claim() {
   exho 0
 }
 
+backup() {
+  backup_folder="backups"
+  if [ ! -d "$backup_folder" ]; then
+    mkdir -p "$backup_folder"
+    echo "Folder created: $backup_folder"
+  fi
+
+  backup_path="$backup_folder/$(hostname)-$(date '+%Y-%m-%d--%H-%M-%S').zip"
+  zip -r "$backup_path" koii-keys
+  echo -e "\nBack is created: $(readlink -f $backup_path)"
+  echo "Done.You can download it from the server to keep the keys safe"
+}
+
 limit_memory() {
 	number=$1
 	memory=$2
@@ -286,6 +299,11 @@ fi
 
 if [[ "$COMMAND" == "set-range" ]];then
   set_range "$2"
+  exit 0
+fi
+
+if [[ "$COMMAND" == "backup" ]];then
+  backup
   exit 0
 fi
 
@@ -511,6 +529,9 @@ main() {
       set-range
       setup-gui
       <COMMAND> <NODE_NUMBER>
+
+      backup
+      <COMMAND>
       "
 
       exit 1

@@ -12,6 +12,7 @@ configs/nodes/old-task-ids
 configs/nodes/proxies
 configs/nodes/stakes
 configs/nodes/task-ids
+backups
 
 images/
 tests/
