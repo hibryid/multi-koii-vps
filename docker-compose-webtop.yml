@@ -19,7 +19,7 @@ services:
 
 
     ports:
-      - ${PORT}:3000
+      - ${IP}:${PORT}:3000
 
     shm_size: "1gb"
 #    runtime: sysbox-runc
