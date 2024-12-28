@@ -89,11 +89,16 @@ update_images() {
 }
 
 unstake() {
-  echo 0
+  number=$1
+  task_id=$2
+  tsx rpc-tools/rpc.ts unstake "$number" "$task_id"
 }
 
 claim() {
-  exho 0
+  number=$1
+  task_id=$2
+  withdraw_address=$3
+  tsx rpc-tools/rpc.ts claim "$number" "$task_id" "$withdraw_address"
 }
 
 backup() {
@@ -234,7 +239,7 @@ generate_sequence() {
 
 function get_task_info() {
   i=$1
-  task_info=$(npx tsx rpc.ts task-info "$i" 2>/dev/null)
+  task_info=$(npx tsx rpc-tools/rpc.ts task-info "$i" 2>/dev/null)
   task_type=$(echo "$task_info" | head -n1 | grep -io "Koii\|KPL")
   echo "$task_info" |\
     sed '/^On KPL Task Operations/d;/On Koii Task Operations/d' |\
@@ -266,7 +271,7 @@ fi
 
 tasks_responses=()
 if [[ "$COMMAND" == "show-rewards" || "$COMMAND" == "claim" ||
-      "$COMMAND" == "claim-to-nodes" || "$COMMAND" == "unstake" ||
+      "$COMMAND" == "claim-to-nodes" ||
       "$COMMAND" == "show-stakes" || "$COMMAND" == "show-submissions" ]];then
 
   for i in $task_ids_aka_array; do
@@ -278,7 +283,7 @@ if [[ "$COMMAND" == "show-rewards" || "$COMMAND" == "claim" ||
     tasks_responses+=("$available_info")
   done
 
-elif [[ "$COMMAND" == "withdraw-unstaked" || "$COMMAND" == "claim-from-old-tasks" ]]; then
+elif [[ "$COMMAND" == "claim-from-old-tasks" || "$COMMAND" == "unstake" ]]; then
 
   for i in $old_task_ids_aka_array; do
     available_info=$(get_task_info "$i")
@@ -287,9 +292,16 @@ elif [[ "$COMMAND" == "withdraw-unstaked" || "$COMMAND" == "claim-from-old-tasks
 fi
 
 
-if [[ "$COMMAND" == "unstake" || "$COMMAND" == "claim" || "$COMMAND" == "claim-to-nodes" || "$COMMAND" == "claim-from-old-tasks" || "$COMMAND" == "withdraw-unstaked" ]];then
+if [[ "$COMMAND" == "claim-to-nodes" || "$COMMAND" == "claim-from-old-tasks" || "$COMMAND" == "withdraw-unstaked" ]];then
   echo "will be added soon"
   exit
+fi
+
+if [[ "$COMMAND" == "claim" ]]; then
+  if [ -z "$WITHDRAW_ADDRESS" ]; then
+    echo "WITHDRAW_ADDRESS variable is empty"
+    exit
+  fi
 fi
 
 if [[ "$COMMAND" == "update-images" || "$COMMAND" == "download-images" ]];then
@@ -386,6 +398,10 @@ main() {
     current_task_stakes=$(cat $stakes_file 2>/dev/null | sed "${i}q;d" | grep -oP '\K[A-Za-z0-9]+' | paste -sd',' - | sed "s/^$/$DEFAULT_TASK_STAKES/" || echo "$DEFAULT_TASK_STAKES")
     current_node_vars=$(cat $node_vars_file 2>/dev/null | sed "${i}q;d" | tr ' ,;' '\n' | grep .)
 
+    current_old_task_ids=$(cat $old_task_ids_file 2>/dev/null | sed "${i}q;d" | grep -oP '\K[A-Za-z0-9]+' | paste -sd',' - | sed "s/^$/$DEFAULT_OLD_TASK_IDS/" || echo "$DEFAULT_OLD_TASK_IDS")
+    current_system_key_address=$(koii address -k koii-keys/koii-"${i}"/wallet/id.json)
+
+
     # round even 1.00001 to 2, zeros before numbers like 0020 expected
     net_number=$(awk 'BEGIN { rounded = int('"$((10#${i}))/250"'+0.999999); print rounded }')
 
@@ -439,7 +455,7 @@ main() {
     elif [[ "$COMMAND" == "show-balances" ]];then
       get_balances "$i"
 
-    elif [[ "$COMMAND" == "show-rewards" || "$COMMAND" == "get-rewards" ]];then
+    elif [[ "$COMMAND" == "show-rewards" || "$COMMAND" == "get-rewards" || "$COMMAND" == "claim" ]];then
       echo "koii-$i rewards:"
 
       for task in "${tasks_responses[@]}"; do
@@ -450,6 +466,18 @@ main() {
           rewards_amount=$(get_rewards "$i" "$task")
           echo "$task_id ($task_name) $task_type: $rewards_amount"
         fi
+
+        if (( $(echo "$rewards_amount > 0" | bc -l) )); then
+          case $COMMAND in
+          "claim")
+            claim "$i" "$task_id" "$WITHDRAW_ADDRESS"
+            ;;
+          "claim-to-nodes")
+            claim "$i" "$task_id" "$current_system_key_address"
+            ;;
+          esac
+        fi
+
       done
 
     elif [[ "$COMMAND" == "show-stakes" ]];then
@@ -464,6 +492,25 @@ main() {
           task_type=$(echo "$task" | jq --raw-output ".task_type")
           stake_amount=$(show_stake "$i" "$task")
           echo "$task_id ($task_name) $task_type: $stake_amount"
+        fi
+
+      done
+
+    elif [[ "$COMMAND" == "unstake" ]];then
+      echo "koii-$i stakes:"
+
+      for task in "${tasks_responses[@]}"; do
+        task_id=$(echo "$task" | jq --raw-output ".task_id")
+
+        if echo "$current_old_task_ids" | grep -q "$task_id"; then
+          task_name=$(echo "$task" | jq ".task_name")
+          task_type=$(echo "$task" | jq --raw-output ".task_type")
+          stake_amount=$(show_stake "$i" "$task")
+          echo "$task_id ($task_name) $task_type: $stake_amount"
+          if (( $(echo "$stake_amount > 0" | bc -l) )); then
+            echo "Unstaking.."
+            unstake "$task_id" "$i"
+          fi
         fi
 
       done
@@ -493,17 +540,7 @@ main() {
         echo "koii-$i: done"
       fi
 
-    elif [[ "$COMMAND" == "claim" || "$COMMAND" == "claim-to-nodes" || "$COMMAND" == "claim-from-old-tasks" || "$COMMAND" == "withdraw-unstaked" ]];then
-      balance=$(get_rewards "$i" "$task")
-      echo "koii-$i: $balance KOII"
-      if (( $(echo "$balance > 0" | bc -l) )); then
-        claim "$i"
-      else
-        echo "koii-$i: NO balance"
-      fi
 
-    elif [[ "$COMMAND" == "unstake" ]];then
-      unstake "$i"
 
     elif [[ "$COMMAND" == "logs" ]];then
       docker logs -n1000 -f koii-$i
@@ -522,8 +559,8 @@ main() {
       show-rewards
       show-stakes
       claim
-      claim-from-old-tasks
       claim-to-nodes
+      claim-from-old-tasks
       limit-cpu
       limit-ram
       set-range

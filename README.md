@@ -172,11 +172,9 @@ bash next_docker set-range 1-3
 bash next_docker show-addresses
 
 # claim rewards
-# Will be added soon
 bash multi-koii.sh claim 1
 
 # Unstake from the old task
-# Will be added soon
 bash multi-koii.sh unstake 1
 
 # limit cores count to use
