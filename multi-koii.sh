@@ -203,15 +203,19 @@ set_range() {
 }
 
 get_padding_width() {
-    local padding=$(echo $1 | cut -d'-' -f1)
+    local padding
+    padding=$(echo "$1" | cut -d'-' -f1)
     echo ${#padding}
 }
 
 # Function to extract range numbers
     get_range() {
         local input=$1
-        local start=$(echo $input | cut -d'-' -f1)
-        local end=$(echo $input | cut -d'-' -f2)
+        local start
+        local end
+
+        start=$(echo "$input" | cut -d'-' -f1)
+        end=$(echo "$input" | cut -d'-' -f2)
 
         # Remove leading zeros for numeric comparison
         start=$(echo $start | sed 's/^0*//')
