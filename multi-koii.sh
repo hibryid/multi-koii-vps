@@ -443,6 +443,9 @@ main() {
     elif [[ "$COMMAND" == "stop" ]];then
       docker compose -p "$i" stop
 
+    elif [[ "$COMMAND" == "start" ]];then
+      docker compose -p "$i" start
+
     elif [[ "$COMMAND" == "down" ]];then
       docker compose -p "$i" down
 
