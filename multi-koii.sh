@@ -203,42 +203,42 @@ set_range() {
 }
 
 get_padding_width() {
-    local padding
-    padding=$(echo "$1" | cut -d'-' -f1)
-    echo ${#padding}
+  local padding
+  padding=$(echo "$1" | cut -d'-' -f1)
+  echo ${#padding}
 }
 
 # Function to extract range numbers
-    get_range() {
-        local input=$1
-        local start
-        local end
+get_range() {
+  local input=$1
+  local start
+  local end
 
-        start=$(echo "$input" | cut -d'-' -f1)
-        end=$(echo "$input" | cut -d'-' -f2)
+  start=$(echo "$input" | cut -d'-' -f1)
+  end=$(echo "$input" | cut -d'-' -f2)
 
-        # Remove leading zeros for numeric comparison
-        start=$(echo $start | sed 's/^0*//')
-        end=$(echo $end | sed 's/^0*//')
+  # Remove leading zeros for numeric comparison
+  start=$(echo $start | sed 's/^0*//')
+  end=$(echo $end | sed 's/^0*//')
 
-        echo "$start $end"
-    }
+  echo "$start $end"
+}
 
 # Function to generate sequence
 generate_sequence() {
-    local start=$1
-    local end=$2
-    local padding=$3
+  local start=$1
+  local end=$2
+  local padding=$3
 
-    local result=""
-    for ((i=start; i<=end; i++)); do
-        # Format number with proper padding
-        printf -v padded_num "%0${padding}d" $i
-        result+="$padded_num "
-    done
+  local result=""
+  for ((i=start; i<=end; i++)); do
+    # Format number with proper padding
+      printf -v padded_num "%0${padding}d" $i
+      result+="$padded_num "
+  done
 
-    # Remove trailing space
-    echo "${result% }"
+  # Remove trailing space
+  echo "${result% }"
 }
 
 function get_task_info() {
