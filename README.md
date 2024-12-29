@@ -76,7 +76,7 @@ cd multi-koii-vps
 
 ### 3. Install some libraries
 ```bash
-npm install @_koii/web3.js @_koii/create-task-cli
+npm install @_koii/web3.js @_koii/create-task-cli @solana/web3.js
 npm install -D tsx
 ```
 
