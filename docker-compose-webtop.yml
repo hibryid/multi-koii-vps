@@ -8,6 +8,7 @@ services:
       - CUSTOM_USER=${CUSTOM_USER}
       - PASSWORD=${PASSWORD}
       - TZ=Etc/UTC
+      - TITLE=koii-webtop-${NUMBER}
 
     volumes:
       - "./configs/docker/webtop/config/install.sh:/custom-cont-init.d/install.sh:ro"
