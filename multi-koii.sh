@@ -27,6 +27,25 @@ if [ -n "$(koii --version >/dev/null 2>&1 || echo 1)" ]; then
   alias koii="docker run --rm --pull=never -v ./koii-keys:/koii-keys:ro local/cli koii"
 fi
 
+check_env_file() {
+  example_env_file=".env.example"
+  env_file=".env"
+  if [ ! -f "$env_file" ]; then
+    cp $example_env_file $env_file
+    return 0
+  fi
+  vars_and_values=$(grep "=" "$example_env_file" | grep -v "#" | sort)
+  example_env_vars=$(grep "=" "$example_env_file" | grep -v "#" | awk -F"=" '{print $1}' | sort)
+  main_env_vars=$(grep "=" "$env_file" | grep -v "#" | awk -F"=" '{print $1}' | sort)
+
+  if [[ "${#example_env_vars}" != "${#main_env_vars}" ]]; then
+    missed_vars=$(comm -13 <(echo "$main_env_vars") <(echo "$example_env_vars"))
+    if [ -n "$missed_vars" ]; then
+      grep -Ff <(echo "$missed_vars") <(echo "$vars_and_values") >> .env
+    fi
+  fi
+}
+
 ask_user() {
   question=$1
   default_choice="y"  # Set default choice to 'y' (for yes) or 'n' (for no)
@@ -583,4 +602,5 @@ main() {
   done
 }
 
+check_env_file
 main
