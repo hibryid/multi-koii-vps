@@ -57,7 +57,7 @@ sudo apt-get install -y nodejs
 
 ### Install koii cli (You can skip this step. It will not work on arm too)
 ```bash
-sh -c "$(curl -sSfL https://raw.githubusercontent.com/koii-network/k2-release/master/k2-install-init_v1.16.4.sh)"
+sh -c "$(curl -sSfL https://raw.githubusercontent.com/koii-network/k2-release/master/k2-install-init_v1.16.6.sh)"
 echo 'export PATH="~/.local/share/koii/install/active_release/bin:$PATH"' > ~/.bashrc
 source ~/.bashrc
 ```
