@@ -20,7 +20,7 @@ import * as process from "node:process";
 
 async function getMyTaskInfo(data: string[]): Promise<string> {
     const task_id = data[0];
-    const connection = new Connection("https://mainnet.koii.network");
+    const connection = new Connection("https://desktop-node-rpc.mainnet.koii.network");
     const taskInfo = await getTaskStateInfo(connection, task_id);
     return JSON.stringify(taskInfo);
 }
