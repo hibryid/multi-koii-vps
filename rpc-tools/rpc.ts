@@ -54,15 +54,17 @@ async function claim(data: string[]): Promise<string> {
         const stake_pot_account = new PublicKey(taskStateJSON.stake_pot_account);
         console.log('Stake Pot Account', stake_pot_account.toString());
         if (IsKPLTask) {
+            let claimerWalletPath = `koii-keys/koii-${number}/namespace/staking_wallet_kpl.json`;
+
             // Create the PublicKey
-            const token_type = new PublicKey(taskStateJSON.token_type);
+            const token_type = taskStateJSON.token_type.toBase58();
             return JSON.stringify(await KPLClaimReward(
                 payerWallet as unknown as SolanaKeypair,
                 taskStateInfoAddress as unknown as SolanaPublicKey,
                 stake_pot_account as unknown as SolanaPublicKey,
                 beneficiaryAccount as unknown as SolanaPublicKey,
                 claimerWalletPath,
-                token_type.toBase58(),
+                token_type,
             ));
         } else {
             return JSON.stringify(await ClaimReward(
