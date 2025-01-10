@@ -56,7 +56,7 @@ fi
 
 cd /root/VPS-task
 
-koii config set --url https://mainnet.koii.network
+koii config set --url https://desktop-node-rpc.mainnet.koii.network
 re='^[0-9]+([.][0-9]+)?$'
 while true; do
     koii_balance=$(koii balance | awk '{print $1}')

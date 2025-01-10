@@ -41,7 +41,7 @@ RUN . /root/.bashrc
 
 RUN cd /root && git clone https://github.com/koii-network/VPS-task && cd VPS-task
 RUN sed -i 's/ENVIRONMENT=".*"/ENVIRONMENT="production"/g' /root/VPS-task/.env-local
-RUN sed -i 's/K2_NODE_URL=".*"/K2_NODE_URL="https:\/\/mainnet.koii.network"/g' /root/VPS-task/.env-local
+RUN sed -i 's/K2_NODE_URL=".*"/K2_NODE_URL="https:\/\/desktop-node-rpc.mainnet.koii.network"/g' /root/VPS-task/.env-local
 
 # COPY ./images /images
 COPY script.sh /root/start.sh

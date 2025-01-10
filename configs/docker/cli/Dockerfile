@@ -13,4 +13,4 @@ RUN apt update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /root/.local/share/koii/install/active_release/bin/koii /usr/local/bin/koii
-RUN chmod +x /usr/local/bin/koii && /usr/local/bin/koii config set --url https://mainnet.koii.network
+RUN chmod +x /usr/local/bin/koii && /usr/local/bin/koii config set --url https://desktop-node-rpc.mainnet.koii.network
