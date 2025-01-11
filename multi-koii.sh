@@ -446,11 +446,10 @@ main() {
       echo "starting koii-$i with webtop port: http://$host_ip:$((30000+i))"
       if [ "$(id -u)" == 0 ]; then
         custom_uid=1000
-        custom_gid=1000
       else
         custom_uid=$(id -u)
-        custom_gid=$(id -g)
       fi
+      custom_gid=$(id -g)
 
       NUMBER=$i NETNUMBER=$net_number CUSTOM_USER=$WEBTOP_CUSTOM_USER PASSWORD=$WEBTOP_PASSWORD \
             IP=$WEBTOP_IP PORT=$((30000+i)) HOST_UID=$custom_uid HOST_GID=$custom_gid \
