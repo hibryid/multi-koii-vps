@@ -423,7 +423,7 @@ main() {
     current_node_vars=$(cat $node_vars_file 2>/dev/null | sed "${i}q;d" | tr ' ,;' '\n' | grep .)
 
     current_old_task_ids=$(cat $old_task_ids_file 2>/dev/null | sed "${i}q;d" | grep -oP '\K[A-Za-z0-9]+' | paste -sd',' - | sed "s/^$/$DEFAULT_OLD_TASK_IDS/" || echo "$DEFAULT_OLD_TASK_IDS")
-    current_system_key_address=$(koii address -k koii-keys/koii-"${i}"/wallet/id.json)
+    current_system_key_address=$(koii address -k koii-keys/koii-"${i}"/wallet/id.json 2>/dev/null)
 
 
     # round even 1.00001 to 2, zeros before numbers like 0020 expected
