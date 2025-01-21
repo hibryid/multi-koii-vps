@@ -87,7 +87,7 @@ cp .env.example .env
 
 
 <details>
-    <summary style="font-size: 1.5em; font-weight: bold;">If you want just to run a Desktop/GUI/webtop node (Click here)</summary>
+    <summary style="font-size: 20px; font-weight: bold;">If you want just to run a Desktop/GUI/webtop node (Click here)</summary>
 
 ### 5. Setup GUI
 You can do it by this command or by manually editing the `.env` file
@@ -117,7 +117,7 @@ You and only you are responsible in any cases.
 </details>
 
 <details>
-    <summary style="font-size: 1.5em; font-weight: bold;">Area for advanced users to run CLI-VPS nodes (Click here)</summary>
+    <summary style="font-size: 20px; font-weight: bold;">Area for advanced users to run CLI-VPS nodes (Click here)</summary>
 
 ### 5. Edit the .env file
 ```bash
