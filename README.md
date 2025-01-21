@@ -1,6 +1,6 @@
 # multi-koii-vps
-It is a script that can help run Koii nodes on vps.
-
+It is a script that can help run Koii nodes on vps.\
+If you need help or assistance, you can ask your questions in the [Koii's official Discord server](https://discord.com/invite/koii-network), especially [this channel](https://discord.com/channels/776174409945579570/1207323567503704084)
 ## Disclaimer
 ***
 The project is released as is.
@@ -99,15 +99,18 @@ bash multi-koii.sh update-images
 
 ### How to run a GUI node (webtop)
 Now everything is good to go.\
-Do not run more than 4 nodes per 1 ip. Proxies are not supported here.
-Edit the `.env` file and be sure that password is set.
-You and only you are responsible in any cases.
 ```bash
 bash multi-koii.sh up-webtop 1
 ```
 It will give you an address like `http://127.0.0.1:30001` where you can go and run a desktop node on your VPS. 
 If you selected it to be accessed remotely, then you may have to open the given port. 
+The default login is: `koii` \
+You can change it the `.env` file if you wish
 
+Reminder:
+Do not run more than 4 nodes per 1 ip. Proxies are not supported here.
+Edit the `.env` file and be sure that password is set.
+You and only you are responsible in any cases.
 
 ## Area for advanced users to run CLI-VPS nodes:
 
