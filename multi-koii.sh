@@ -419,7 +419,7 @@ main() {
   for i in $range; do
     current_proxy=$(cat $proxies_file 2>/dev/null | sed "${i}q;d" | sed 's/socks5:\/\///g')
     current_task_ids=$(cat $task_ids_file 2>/dev/null | sed "${i}q;d" | grep -oP '\K[A-Za-z0-9]+' | paste -sd',' - | sed "s/^$/$DEFAULT_TASK_IDS/" || echo "$DEFAULT_TASK_IDS")
-    current_task_stakes=$(cat $stakes_file 2>/dev/null | sed "${i}q;d" | grep -oP '\K[A-Za-z0-9]+' | paste -sd',' - | sed "s/^$/$DEFAULT_TASK_STAKES/" || echo "$DEFAULT_TASK_STAKES")
+    current_task_stakes=$(cat $stakes_file 2>/dev/null | sed "${i}q;d" | grep -oP '\K[A-Za-z0-9.]+' | paste -sd',' - | sed "s/^$/$DEFAULT_TASK_STAKES/" || echo "$DEFAULT_TASK_STAKES")
     current_node_vars=$(cat $node_vars_file 2>/dev/null | sed "${i}q;d" | tr ' ,;' '\n' | grep .)
 
     current_old_task_ids=$(cat $old_task_ids_file 2>/dev/null | sed "${i}q;d" | grep -oP '\K[A-Za-z0-9]+' | paste -sd',' - | sed "s/^$/$DEFAULT_OLD_TASK_IDS/" || echo "$DEFAULT_OLD_TASK_IDS")
