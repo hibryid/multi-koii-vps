@@ -19,7 +19,7 @@ Requirements:
 2. You can run any amount of nodes, but up to 4 nodes per 1 ip only. Please keep it in mind
 ***
 
-### 1. Prepare the system
+#### 1. Prepare the system
 <details>
     <summary>On Ubuntu (click here)</summary>
 
@@ -55,7 +55,7 @@ curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - &&\
 sudo apt-get install -y nodejs
 ```
 
-### Install koii cli (You can skip this step. It will not work on arm too)
+#### Install koii cli (You can skip this step. It will not work on arm too)
 ```bash
 sh -c "$(curl -sSfL https://raw.githubusercontent.com/koii-network/k2-release/master/k2-install-init_v1.16.6.sh)"
 echo 'export PATH="~/.local/share/koii/install/active_release/bin:$PATH"' > ~/.bashrc
@@ -68,19 +68,19 @@ source ~/.bashrc
     <summary>On Arch (Soon)</summary>
 </details>
 
-### 2. Git clone and go to the project
+#### 2. Git clone and go to the project
 ```bash
 git clone https://github.com/hibryid/multi-koii-vps.git
 cd multi-koii-vps
 ```
 
-### 3. Install some libraries
+#### 3. Install some libraries
 ```bash
 npm install @_koii/web3.js @_koii/create-task-cli @solana/web3.js
 npm install -D tsx
 ```
 
-### 4. Copy the .env file
+#### 4. Copy the .env file
 ```bash
 cp .env.example .env
 ```
@@ -89,7 +89,7 @@ cp .env.example .env
 <details>
     <summary style="font-size: 20px; font-weight: bold;">If you want just to run a Desktop/GUI/webtop node (Click here)</summary>
 
-### 5. Setup GUI
+#### 5. Setup GUI
 You can do it by this command or by manually editing the `.env` file
 ```bash
 bash multi-koii.sh setup-gui
@@ -99,7 +99,7 @@ If you have an ARM device, prepare some images to continue:
 bash multi-koii.sh update-images
 ```
 
-### How to run a GUI node (webtop)
+#### How to run a GUI node (webtop)
 Now everything is good to go.\
 ```bash
 bash multi-koii.sh up-webtop 1
@@ -119,18 +119,18 @@ You and only you are responsible in any cases.
 <details>
     <summary style="font-size: 20px; font-weight: bold;">Area for advanced users to run CLI-VPS nodes (Click here)</summary>
 
-### 5. Edit the .env file
+#### 5. Edit the .env file
 ```bash
 # Edit the .env file for your settings with nano or micro
 nano .env
 ```
 
-### 6. Update images
+#### 6. Update images
 ```bash
 bash multi-koii.sh update-images
 ```
 
-### Commands for running CLI-VPS nodes:
+#### Commands for running CLI-VPS nodes:
 It is an advanced way to manage multiple nodes.\
 Here is a list of examples.\
 You can use any of these range number formats: `1-10` or `0001-0010`. \
@@ -199,7 +199,7 @@ bash multi-koii.sh backup
 The script will give you the exact ip and port to open it in browser.
 To set up a https connection you may try to use "nginx proxy manager".
 
-### If you need to set any custom ids, tasks and variables for nodes
+#### If you need to set any custom ids, tasks and variables for nodes
 And edit them in the format you like, according to the examples. \
 The serial number of a raw refers to the serial number of the node
 ```bash
@@ -210,7 +210,7 @@ cp configs/nodes/example-task-ids configs/nodes/task-ids
 ```
 </details>
 
-### Additional info / Credits
+#### Additional info / Credits
 This script can be identified as a helper to install some finished products of other projects.\
 Anyway, according to their licences I have to list them:
 1. [Binfmt](https://github.com/tonistiigi/binfmt) - cross-platform emulator collection distributed with Docker images.
