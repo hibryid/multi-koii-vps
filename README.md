@@ -21,7 +21,7 @@ Requirements:
 
 ### 1. Prepare the system
 <details>
-    <summary>On Ubuntu (spoiler)</summary>
+    <summary>On Ubuntu (click here)</summary>
 
 #### Install required tools
 ```bash
@@ -85,7 +85,9 @@ npm install -D tsx
 cp .env.example .env
 ```
 
-## If you want just to run a GUI node (webtop)
+
+<details>
+    <summary style="font-size: 1.5em; font-weight: bold;">If you want just to run a Desktop/GUI/webtop node (Click here)</summary>
 
 ### 5. Setup GUI
 You can do it by this command or by manually editing the `.env` file
@@ -112,7 +114,10 @@ Do not run more than 4 nodes per 1 ip. Proxies are not supported here.
 Edit the `.env` file and be sure that password is set.
 You and only you are responsible in any cases.
 
-## Area for advanced users to run CLI-VPS nodes:
+</details>
+
+<details>
+    <summary style="font-size: 1.5em; font-weight: bold;">Area for advanced users to run CLI-VPS nodes (Click here)</summary>
 
 ### 5. Edit the .env file
 ```bash
@@ -203,6 +208,7 @@ cp configs/nodes/example-old-task-ids configs/nodes/old-task-ids
 cp configs/nodes/example-node-vars configs/nodes/node-vars
 cp configs/nodes/example-task-ids configs/nodes/task-ids
 ```
+</details>
 
 ### Additional info / Credits
 This script can be identified as a helper to install some finished products of other projects.\
