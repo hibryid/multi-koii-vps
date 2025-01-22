@@ -13,7 +13,7 @@ import {
     checkProgram as KPLCheckProgram,
     ClaimReward as KPLClaimReward
 } from '@_koii/create-task-cli/build/kpl_task_contract/task-program';
-import { KPLProgramID } from '@_koii/create-task-cli/build/constant';
+// import { KPLProgramID } from '@_koii/create-task-cli/build/constant';
 
 import * as fs from "fs";
 import * as process from "node:process";
@@ -26,10 +26,12 @@ async function getMyTaskInfo(data: string[]): Promise<string> {
 }
 
 async function claim(data: string[]): Promise<string> {
+
     try {
         const number = data[0];
         const task_id = data[1];
-        let beneficiaryAccount = data[2];
+        const beneficiaryAccount = data[2];
+
         const connection = await establishConnection();
         await KPLEstablishConnection();
 
@@ -41,7 +43,7 @@ async function claim(data: string[]): Promise<string> {
         const taskStateInfoAddress = new PublicKey(task_id)
         await establishPayer(payerWallet);
         await KPLEstablishPayer(payerWallet as unknown as SolanaKeypair);
-        let programId = await checkProgram();
+        await checkProgram();
         await KPLCheckProgram();
 
         console.log('Calling ClaimReward');
@@ -57,14 +59,14 @@ async function claim(data: string[]): Promise<string> {
             let claimerWalletPath = `koii-keys/koii-${number}/namespace/staking_wallet_kpl.json`;
 
             // Create the PublicKey
-            const token_type = taskStateJSON.token_type.toBase58();
+            const token_type = new PublicKey(taskStateJSON.token_type);
             return JSON.stringify(await KPLClaimReward(
                 payerWallet as unknown as SolanaKeypair,
                 taskStateInfoAddress as unknown as SolanaPublicKey,
                 stake_pot_account as unknown as SolanaPublicKey,
-                beneficiaryAccount as unknown as SolanaPublicKey,
+                new PublicKey(beneficiaryAccount) as unknown as SolanaPublicKey,
                 claimerWalletPath,
-                token_type,
+                token_type.toBase58(),
             ));
         } else {
             return JSON.stringify(await ClaimReward(
@@ -76,6 +78,7 @@ async function claim(data: string[]): Promise<string> {
             ));
         }
     } catch (error) {
+        console.log(error);
         return error;
     }
 }
@@ -97,7 +100,7 @@ async function unstake(data: string[]): Promise<string> {
 
         await establishPayer(payerWallet);
         await KPLEstablishPayer(payerWallet as unknown as SolanaKeypair);
-        let programId = await checkProgram();
+        await checkProgram();
         await KPLCheckProgram();
 
         // console.log(programId)
@@ -105,7 +108,7 @@ async function unstake(data: string[]): Promise<string> {
         const accountInfo = await connection.getAccountInfo(new PublicKey(taskStateInfoAddress.toBase58()));
         const IsKPLTask = await checkIsKPLTask(accountInfo);
         if (IsKPLTask) {
-            let programId = new PublicKey(KPLProgramID);
+            // let programId = new PublicKey(KPLProgramID);
             let walletSubmitter = fs.readFileSync(`koii-keys/koii-${number}/namespace/staking_wallet_kpl.json`, 'utf-8');
             let secretKeySubmitter = Uint8Array.from(JSON.parse(walletSubmitter))
             let submitterKeypair = Keypair.fromSecretKey(secretKeySubmitter)
@@ -119,6 +122,7 @@ async function unstake(data: string[]): Promise<string> {
             return JSON.stringify(await Withdraw(payerWallet, taskStateInfoAddress, submitterKeypair));
         }
     } catch (error) {
+        console.log(error);
         return error;
     }
 }
@@ -138,7 +142,6 @@ async function main() {
     if (!commands[command]) {
         throw new Error(`Unknown command: ${command}`);
     }
-
     return commands[command](data);
 }
 
@@ -149,5 +152,5 @@ process.on('SIGINT', function() {
 
 main()
     .then((res) => console.log(res))
-    .catch((error) => console.log(error));
+    .catch((error) => console.log(''));
 
