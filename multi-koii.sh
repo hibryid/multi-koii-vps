@@ -117,7 +117,7 @@ claim() {
   number=$1
   task_id=$2
   withdraw_address=$3
-  tsx rpc-tools/rpc.ts claim "$number" "$task_id" "$withdraw_address"
+  tsx --no-deprecation rpc-tools/rpc.ts claim "$number" "$task_id" "$withdraw_address"
 }
 
 backup() {
@@ -263,7 +263,7 @@ generate_sequence() {
 
 function get_task_info() {
   i=$1
-  task_info=$(npx tsx rpc-tools/rpc.ts task-info "$i" 2>/dev/null)
+  task_info=$(tsx --no-deprecation rpc-tools/rpc.ts task-info "$i" 2>/dev/null)
   task_type=$(echo "$task_info" | head -n1 | grep -io "Koii\|KPL")
   echo "$task_info" |\
     sed '/^On KPL Task Operations/d;/On Koii Task Operations/d' |\
@@ -491,19 +491,18 @@ main() {
           task_type=$(echo "$task" | jq --raw-output ".task_type")
           rewards_amount=$(get_rewards "$i" "$task")
           echo "$task_id ($task_name) $task_type: $rewards_amount"
-        fi
 
-        if (( $(echo "$rewards_amount > 0" | bc -l) )); then
-          case $COMMAND in
-          "claim")
-            claim "$i" "$task_id" "$WITHDRAW_ADDRESS"
-            ;;
-          "claim-to-nodes")
-            claim "$i" "$task_id" "$current_system_key_address"
-            ;;
-          esac
+          if (( $(echo "$rewards_amount > 0" | bc -l) )); then
+            case $COMMAND in
+            "claim")
+              claim "$i" "$task_id" "$WITHDRAW_ADDRESS"
+              ;;
+            "claim-to-nodes")
+              claim "$i" "$task_id" "$current_system_key_address"
+              ;;
+            esac
+          fi
         fi
-
       done
 
     elif [[ "$COMMAND" == "show-stakes" ]];then
