@@ -20,7 +20,7 @@ import * as process from "node:process";
 
 async function getMyTaskInfo(data: string[]): Promise<string> {
     const task_id = data[0];
-    const connection = new Connection("https://desktop-node-rpc.mainnet.koii.network");
+    const connection = new Connection("https://mainnet.koii.network");
     const taskInfo = await getTaskStateInfo(connection, task_id);
     return JSON.stringify(taskInfo);
 }
@@ -75,8 +75,8 @@ async function claim(data: string[]): Promise<string> {
                 claimerWalletPath,
             ));
         }
-    } catch (err) {
-        return "";
+    } catch (error) {
+        return error;
     }
 }
 
@@ -118,8 +118,8 @@ async function unstake(data: string[]): Promise<string> {
         } else {
             return JSON.stringify(await Withdraw(payerWallet, taskStateInfoAddress, submitterKeypair));
         }
-    } catch (err) {
-        return "";
+    } catch (error) {
+        return error;
     }
 }
 
@@ -149,5 +149,5 @@ process.on('SIGINT', function() {
 
 main()
     .then((res) => console.log(res))
-    .catch((error) => console.log(""));
+    .catch((error) => console.log(error));
 

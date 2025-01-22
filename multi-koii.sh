@@ -110,7 +110,7 @@ update_images() {
 unstake() {
   number=$1
   task_id=$2
-  tsx rpc-tools/rpc.ts unstake "$number" "$task_id"
+  tsx --no-deprecation rpc-tools/rpc.ts unstake "$number" "$task_id"
 }
 
 claim() {
@@ -535,7 +535,7 @@ main() {
           echo "$task_id ($task_name) $task_type: $stake_amount"
           if (( $(echo "$stake_amount > 0" | bc -l) )); then
             echo "Unstaking.."
-            unstake "$task_id" "$i"
+            unstake "$i" "$task_id" 
           fi
         fi
 
