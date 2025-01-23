@@ -179,8 +179,11 @@ bash multi-koii.sh show-balances 1
 bash next_docker set-range 1-3
 bash next_docker show-addresses
 
-# claim rewards
+# claim rewards to address set in .env file
 bash multi-koii.sh claim 1
+
+# claim rewards to nodes, their system key
+bash multi-koii.sh claim-to-nodes 1
 
 # Unstake from the old task
 bash multi-koii.sh unstake 1

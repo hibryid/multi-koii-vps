@@ -316,7 +316,7 @@ elif [[ "$COMMAND" == "claim-from-old-tasks" || "$COMMAND" == "unstake" ]]; then
 fi
 
 
-if [[ "$COMMAND" == "claim-to-nodes" || "$COMMAND" == "claim-from-old-tasks" || "$COMMAND" == "withdraw-unstaked" ]];then
+if [[ "$COMMAND" == "claim-from-old-tasks" || "$COMMAND" == "withdraw-unstaked" ]];then
   echo "will be added soon"
   exit
 fi
@@ -481,7 +481,7 @@ main() {
     elif [[ "$COMMAND" == "show-balances" ]];then
       get_balances "$i"
 
-    elif [[ "$COMMAND" == "show-rewards" || "$COMMAND" == "get-rewards" || "$COMMAND" == "claim" ]];then
+    elif [[ "$COMMAND" == "show-rewards" || "$COMMAND" == "get-rewards" || "$COMMAND" == "claim" || "$COMMAND" == "claim-to-nodes" ]];then
       echo "koii-$i rewards:"
 
       for task in "${tasks_responses[@]}"; do
